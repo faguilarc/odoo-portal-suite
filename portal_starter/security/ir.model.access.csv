@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_portal_document_type_manager,portal.document.type.manager,model_portal_document_type,portal_starter_group_manager,1,1,1,1
+access_portal_config_manager,portal.config.manager,model_portal_config,portal_starter_group_manager,1,1,1,1
+access_portal_config_user,portal.config.user,model_portal_config,base.group_user,1,0,0,0
+access_portal_invite_wizard,portal.invite.wizard,model_portal_invite_wizard,base.group_user,1,1,1,0

@@ -1,0 +1,121 @@
+/* Portal Starter Kit - Main Styles */
+
+/* Base portal overrides */
+.o_portal .portal-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.o_portal .portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Welcome banner animation */
+.portal-welcome-banner {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Document table styling */
+.o_portal table.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.o_portal table.table td {
+    vertical-align: middle;
+    padding: 12px 8px;
+}
+
+.o_portal table.table tbody tr:hover {
+    background-color: rgba(28, 110, 242, 0.04);
+}
+
+/* Status badges */
+.badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    text-transform: capitalize;
+}
+
+/* Search bar */
+.o_portal .card .form-control {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 8px 16px;
+}
+
+.o_portal .card .form-control:focus {
+    border-color: var(--portal-primary, #1C6EF2);
+    box-shadow: 0 0 0 3px rgba(28, 110, 242, 0.15);
+}
+
+/* Action buttons */
+.o_portal .btn-outline-primary {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.o_portal .btn-outline-primary:hover {
+    transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .portal-welcome-banner {
+        padding: 24px;
+    }
+    .portal-welcome-banner h1 {
+        font-size: 22px;
+    }
+    .portal-stats-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* Dark theme support */
+[data-theme="dark"] .portal-card {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .portal-card-body h3 {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .portal-card-body p {
+    color: #a0a0a0;
+}
+
+/* Print styles */
+@media print {
+    .o_portal .btn,
+    .o_portal .form-inline {
+        display: none !important;
+    }
+    .portal-card {
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+    }
+}

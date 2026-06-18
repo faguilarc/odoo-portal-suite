@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Security: Access group for portal configuration -->
+        <record id="portal_starter_group_manager" model="res.groups">
+            <field name="name">Portal Starter Manager</field>
+            <field name="category_id" ref="base.module_category_portal"/>
+            <field name="comment">
+                Manage portal configuration, document types, and access controls.
+            </field>
+        </record>
+
+    </data>
+</odoo>

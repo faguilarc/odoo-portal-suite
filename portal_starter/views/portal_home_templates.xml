@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Portal Home Page Template -->
+    <template id="portal_home_page" name="Portal Home Page">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+
+            <!-- Custom CSS injected via portal config or partner -->
+            <t t-if="portal_config">
+                <style>
+                    :root {
+                        --portal-primary: <t t-esc="portal_config.primary_color or '#1C6EF2'"/>;
+                        --portal-secondary: <t t-esc="portal_config.secondary_color or '#6C757D'"/>;
+                    }
+                    .portal-card {
+                        background: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+                        transition: transform 0.2s, box-shadow 0.2s;
+                        overflow: hidden;
+                        cursor: pointer;
+                    }
+                    .portal-card:hover {
+                        transform: translateY(-4px);
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+                    }
+                    .portal-card-header {
+                        padding: 24px;
+                        text-align: center;
+                        color: white;
+                    }
+                    .portal-card-body {
+                        padding: 20px 24px;
+                    }
+                    .portal-card-body h3 {
+                        margin: 0 0 8px 0;
+                        font-size: 18px;
+                        font-weight: 600;
+                        color: #212529;
+                    }
+                    .portal-card-body p {
+                        margin: 0;
+                        color: #6c757d;
+                        font-size: 14px;
+                    }
+                    .portal-icon {
+                        font-size: 40px;
+                        margin-bottom: 12px;
+                    }
+                    .portal-stats-row {
+                        display: flex;
+                        justify-content: space-around;
+                        padding: 16px 0;
+                        margin: 16px 0;
+                        border-top: 1px solid #eee;
+                        border-bottom: 1px solid #eee;
+                    }
+                    .portal-stat {
+                        text-align: center;
+                    }
+                    .portal-stat-value {
+                        font-size: 28px;
+                        font-weight: 700;
+                        color: var(--portal-primary);
+                    }
+                    .portal-stat-label {
+                        font-size: 12px;
+                        color: #6c757d;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                    .portal-welcome-banner {
+                        background: linear-gradient(135deg, var(--portal-primary), var(--portal-secondary));
+                        color: white;
+                        border-radius: 12px;
+                        padding: 40px;
+                        margin-bottom: 30px;
+                    }
+                    .portal-welcome-banner h1 {
+                        margin: 0 0 10px 0;
+                        font-size: 28px;
+                    }
+                    .portal-welcome-banner p {
+                        margin: 0;
+                        opacity: 0.9;
+                        font-size: 16px;
+                    }
+                    .portal-doc-count {
+                        display: inline-block;
+                        background: var(--portal-primary);
+                        color: white;
+                        border-radius: 20px;
+                        padding: 2px 10px;
+                        font-size: 12px;
+                        font-weight: 600;
+                        margin-left: 8px;
+                    }
+                </style>
+            </t>
+
+            <t t-if="partner_custom_css">
+                <style t-raw="partner_custom_css"/>
+            </t>
+
+            <div class="container oe_structure">
+
+                <!-- Welcome Banner -->
+                <t t-if="portal_config and portal_config.portal_welcome_message">
+                    <div class="portal-welcome-banner" t-raw="portal_config.portal_welcome_message"/>
+                </t>
+
+                <!-- Document Type Cards Grid -->
+                <div class="row">
+                    <t t-foreach="document_types" t-as="doc_type">
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <a t-attf-href="/my/documents/{{ doc_type.code }}"
+                               class="portal-card" style="text-decoration: none;">
+                                <div class="portal-card-header"
+                                     t-attf-style="background-color: {{ doc_type.color or 'var(--portal-primary)' }};">
+                                    <i t-attf-class="portal-icon fa {{ doc_type.icon or 'fa-file' }}"/>
+                                    <h3 t-field="doc_type.name"/>
+                                </div>
+                                <div class="portal-card-body">
+                                    <p t-field="doc_type.description"/>
+                                </div>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+
+            </div>
+
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequence for portal access codes -->
+        <record id="portal_starter_code_sequence" model="ir.sequence">
+            <field name="name">Portal Access Code Sequence</field>
+            <field name="code">portal.starter.code</field>
+            <field name="prefix">PRT-</field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Default portal config for main company -->
+        <record id="default_portal_config" model="portal.config">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="portal_name">Customer Portal</field>
+            <field name="portal_welcome_message" type="html">
+                <h2>Bienvenido a su portal</h2>
+                <p>Desde aqui puede gestionar sus documentos, consultar facturas,
+                   pedidos, entregas y mas.</p>
+            </field>
+            <field name="primary_color">#1C6EF2</field>
+            <field name="session_timeout_minutes">480</field>
+        </record>
+
+        <!-- Default document types -->
+        <record id="doc_type_sale_order" model="portal.document.type">
+            <field name="name">Sales Orders</field>
+            <field name="code">sale_order</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="icon">fa-shopping-cart</field>
+            <field name="color">#28a745</field>
+            <field name="sequence">1</field>
+            <field name="description">View and download your confirmed sales orders</field>
+        </record>
+
+        <record id="doc_type_account_invoice" model="portal.document.type">
+            <field name="name">Invoices</field>
+            <field name="code">account_move</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="icon">fa-file-invoice-dollar</field>
+            <field name="color">#dc3545</field>
+            <field name="sequence">2</field>
+            <field name="description">View, download, and pay your invoices</field>
+        </record>
+
+        <record id="doc_type_delivery" model="portal.document.type">
+            <field name="name">Deliveries</field>
+            <field name="code">stock_picking</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="icon">fa-truck</field>
+            <field name="color">#17a2b8</field>
+            <field name="sequence">3</field>
+            <field name="description">Track your deliveries and shipments</field>
+        </record>
+
+        <record id="doc_type_quotation" model="portal.document.type">
+            <field name="name">Quotations</field>
+            <field name="code">quotation</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="icon">fa-file-alt</field>
+            <field name="color">#ffc107</field>
+            <field name="sequence">4</field>
+            <field name="description">Review and approve your quotations</field>
+            <field name="allowed_actions">["view", "approve", "download_pdf"]</field>
+        </record>
+
+        <!-- Email template for portal invitations -->
+        <record id="portal_invite_email_template" model="mail.template">
+            <field name="name">Portal Invitation</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">You have been invited to {{ object.company_id.name }} Portal</field>
+            <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-size: 14px;">
+    <table width="100%" cellpadding="0" bgcolor="#f4f4f4" style="padding: 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" bgcolor="#ffffff"
+                       style="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td bgcolor="#1C6EF2" style="padding: 30px 40px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 24px;">
+                                {{ object.company_id.name }}
+                            </h1>
+                            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9);">
+                                Customer Portal Access
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 30px 40px;">
+                            <p>Hello <strong>{{ object.name }}</strong>,</p>
+                            <p>You have been granted access to our customer portal.
+                               Here you can manage your orders, invoices, deliveries,
+                               and more.</p>
+                            <p style="text-align: center; margin: 30px 0;">
+                                <a href="{{ ctx.get('portal_link', '/my') }}"
+                                   style="background-color: #1C6EF2; color: white;
+                                          padding: 14px 32px; text-decoration: none;
+                                          border-radius: 6px; font-weight: bold;
+                                          display: inline-block;">
+                                    Access Your Portal
+                                </a>
+                            </p>
+                            {% if ctx.get('custom_message') %}
+                            <p style="background: #f8f9fa; padding: 15px;
+                                      border-left: 4px solid #1C6EF2;
+                                      border-radius: 4px;">
+                                {{ ctx.get('custom_message') }}
+                            </p>
+                            {% endif %}
+                            <p>If the button above doesn't work, copy and paste this
+                               link into your browser:</p>
+                            <p style="color: #1C6EF2; word-break: break-all;">
+                                {{ ctx.get('portal_link', '/my') }}
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 20px 40px; background: #f8f9fa;
+                                   text-align: center; color: #6c757d; font-size: 12px;">
+                            <p style="margin: 0;">
+                                {{ object.company_id.name }} &mdash;
+                                {{ object.company_id.phone or '' }}
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+            </field>
+            <field name="email_from">{{ (object.company_id.email or user.email) }}</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="lang">{{ object.lang or user.lang }}</field>
+        </record>
+
+    </data>
+</odoo>

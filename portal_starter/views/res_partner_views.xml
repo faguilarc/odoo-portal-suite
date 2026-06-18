@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Portal fields on res.partner form -->
+    <record id="res_partner_portal_form_view" model="ir.ui.view">
+        <field name="name">res.partner.portal.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="inside">
+                <group string="Portal Access" groups="portal_starter.portal_starter_group_manager">
+                    <field name="portal_enabled"/>
+                    <field name="portal_code" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                    <field name="portal_max_sessions" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                    <field name="portal_last_login" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                    <field name="portal_login_count" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                </group>
+                <group string="Portal Appearance" groups="portal_starter.portal_starter_group_manager">
+                    <field name="portal_theme" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                    <field name="portal_company_logo" filename="portal_company_logo"
+                           attrs="{'invisible': [('portal_enabled', '=', False)]}"
+                           widget="image" class="oe_avatar"/>
+                </group>
+                <group string="Portal Document Access" groups="portal_starter.portal_starter_group_manager">
+                    <field name="portal_allowed_document_types"
+                           widget="many2many_tags"
+                           attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                </group>
+            </xpath>
+            <!-- Add portal action buttons -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_portal" type="object"
+                        class="oe_stat_button" icon="fa-globe"
+                        attrs="{'invisible': [('portal_enabled', '=', False)]}">
+                    <field name="portal_enabled" widget="boolean_button"
+                           string="Portal"/>
+                </button>
+                <button name="action_send_portal_invite" type="object"
+                        class="oe_stat_button" icon="fa-paper-plane"
+                        string="Invite"
+                        attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Portal Document Type form view -->
+    <record id="portal_document_type_form_view" model="ir.ui.view">
+        <field name="name">portal.document.type.form</field>
+        <field name="model">portal.document.type</field>
+        <field name="arch" type="xml">
+            <form string="Portal Document Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="action" name="%(portal_starter.portal_document_type_action)d"
+                                class="oe_stat_button" icon="fa-file-alt">
+                            <field string="Documents" name="id" widget="integer"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Sales Orders"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="model_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="icon" placeholder="fa-file"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <group string="Display">
+                        <field name="portal_visible"/>
+                        <field name="max_items_per_page"/>
+                    </group>
+                    <group string="Fields Visible in Portal">
+                        <field name="field_ids" nolabel="1"
+                               domain="[('model_id', '=', model_id), ('ttype', 'not in', ['reference', 'binary'])]">
+                            <tree>
+                                <field name="name"/>
+                                <field name="field_description"/>
+                                <field name="ttype"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1" placeholder="Description shown to portal users..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Portal Document Type list view -->
+    <record id="portal_document_type_list_view" model="ir.ui.view">
+        <field name="name">portal.document.type.list</field>
+        <field name="model">portal.document.type</field>
+        <field name="arch" type="xml">
+            <list string="Portal Document Types" decoration-danger="not portal_visible">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="icon"/>
+                <field name="model_id"/>
+                <field name="portal_visible" widget="boolean_toggle"/>
+                <field name="max_items_per_page"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Portal Document Type action -->
+    <record id="portal_document_type_action" model="ir.actions.act_window">
+        <field name="name">Document Types</field>
+        <field name="res_model">portal.document.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define the document types visible in the portal
+            </p>
+            <p>
+                Each document type maps to an Odoo model and controls
+                which fields and actions portal users can access.
+            </p>
+        </field>
+    </record>
+
+    <!-- Portal Configuration form view -->
+    <record id="portal_config_form_view" model="ir.ui.view">
+        <field name="name">portal.config.form</field>
+        <field name="model">portal.config</field>
+        <field name="arch" type="xml">
+            <form string="Portal Configuration">
+                <header>
+                    <button name="action_open_portal_preview" type="object"
+                            string="Preview Portal" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="company_id" readonly="1" placeholder="Company"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <!-- General Tab -->
+                        <page string="General" name="general">
+                            <group>
+                                <group string="Branding">
+                                    <field name="portal_name"/>
+                                    <field name="portal_show_company_logo"/>
+                                    <field name="portal_favicon" filename="portal_favicon"
+                                           widget="image" class="oe_avatar"/>
+                                </group>
+                                <group string="Colors">
+                                    <field name="primary_color" widget="color_picker"/>
+                                    <field name="secondary_color" widget="color_picker"/>
+                                </group>
+                            </group>
+                            <group string="Welcome Message">
+                                <field name="portal_welcome_message"
+                                       nolabel="1" widget="html"/>
+                            </group>
+                        </page>
+
+                        <!-- Features Tab -->
+                        <page string="Features" name="features">
+                            <group>
+                                <group string="Document Features">
+                                    <field name="enable_document_download"/>
+                                    <field name="enable_online_payment"/>
+                                </group>
+                                <group string="Support">
+                                    <field name="enable_ticket_system"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Security Tab -->
+                        <page string="Security" name="security">
+                            <group>
+                                <group string="Session">
+                                    <field name="session_timeout_minutes"/>
+                                    <field name="max_login_attempts"/>
+                                    <field name="lockout_minutes"/>
+                                </group>
+                                <group string="Authentication">
+                                    <field name="enable_two_factor"/>
+                                    <field name="enable_notifications"/>
+                                    <field name="notification_email"/>
+                                    <field name="notification_in_app"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Appearance Tab -->
+                        <page string="Appearance" name="appearance">
+                            <group string="Footer">
+                                <field name="footer_text"/>
+                                <field name="show_social_links"/>
+                                <field name="social_facebook"
+                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+                                <field name="social_linkedin"
+                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+                                <field name="social_twitter"
+                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+                                <field name="social_instagram"
+                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+                            </group>
+                            <group string="Advanced Customization">
+                                <field name="custom_css" nolabel="1"
+                                       placeholder="/* Add your custom CSS here */
+.my-portal-card { border-radius: 12px; }"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Portal Configuration action -->
+    <record id="portal_config_action" model="ir.actions.act_window">
+        <field name="name">Portal Configuration</field>
+        <field name="res_model">portal.config</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'form_view_initial_mode': 'edit'}</field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="portal_starter_menu_root"
+              name="Portal Starter"
+              parent="base.menu_administration"
+              sequence="80"/>
+
+    <menuitem id="portal_starter_menu_config"
+              name="Configuration"
+              parent="portal_starter_menu_root"
+              sequence="10"/>
+
+    <menuitem id="portal_starter_menu_portal_config"
+              name="Portal Settings"
+              parent="portal_starter_menu_config"
+              action="portal_config_action"
+              sequence="10"
+              groups="portal_starter.portal_starter_group_manager"/>
+
+    <menuitem id="portal_starter_menu_doc_types"
+              name="Document Types"
+              parent="portal_starter_menu_config"
+              action="portal_document_type_action"
+              sequence="20"
+              groups="portal_starter.portal_starter_group_manager"/>
+
+</odoo>
