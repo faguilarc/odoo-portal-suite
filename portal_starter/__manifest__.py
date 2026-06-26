@@ -22,6 +22,7 @@
         "views/res_partner_views.xml",
         "views/portal_templates.xml",
         "views/portal_home_templates.xml",
+        "views/portal_email_templates.xml",
         "data/portal_starter_data.xml",
     ],
     "assets": {

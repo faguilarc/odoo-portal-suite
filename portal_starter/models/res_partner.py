@@ -116,15 +116,39 @@ class ResPartner(models.Model):
         }
 
     def action_send_portal_invite(self):
-        """Send a portal invitation email to this partner."""
+        """Send a portal invitation email to this partner.
+
+        Renders the QWeb template ``portal_starter.portal_invite_email_body``
+        with explicit variables (object, company, portal_link) and creates a
+        ``mail.mail`` record that is sent immediately.
+        """
         self.ensure_one()
         if not self.email:
             raise ValidationError(_("Partner must have an email to receive portal invitation."))
+
         self._generate_portal_code()
-        template = self.env.ref("portal_starter.portal_invite_email_template")
-        template.with_context(
-            portal_link=f"/my/home?code={self.portal_code}",
-        ).send_mail(
-            self.id,
-            email_values={"email_to": self.email},
+
+        company = self.company_id or self.env.company
+        base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+        portal_link = f"{base_url}/my/home?code={self.portal_code}"
+
+        # Render the QWeb view — NOT through mail.template.send_mail()
+        body_html = self.env["ir.qweb"]._render(
+            "portal_starter.portal_invite_email_body",
+            {
+                "object": self.sudo(),
+                "company": company.sudo(),
+                "portal_link": portal_link,
+                "user": self.env.user,
+                "custom_message": "",
+            },
         )
+
+        self.env["mail.mail"].sudo().create(
+            {
+                "subject": _("Invitation to %s Portal") % company.name,
+                "body_html": body_html,
+                "email_to": self.email,
+                "email_from": company.email or self.env.user.email_formatted,
+            }
+        ).send()
