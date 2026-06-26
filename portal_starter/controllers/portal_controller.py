@@ -10,7 +10,7 @@ class PortalStarterController(CustomerPortal):
     def _prepare_home_values(self, values):
         """Add portal config and document types to home page values."""
         values = super()._prepare_home_values(values)
-        partner = request.env.user.partner_id
+        partner = request.env.user.partner_id.sudo()
 
         portal_config = request.env["portal.config"].sudo().search(
             [("company_id", "=", request.env.company.id)],
@@ -22,9 +22,9 @@ class PortalStarterController(CustomerPortal):
             .sudo()
             .search([
                 ("portal_visible", "=", True),
-                ("id", "in", partner.portal_allowed_document_type_ids.ids),
+                ("id", "in", partner.portal_allowed_document_types.ids),
             ])
-            if partner.portal_allowed_document_type_ids
+            if partner.portal_allowed_document_types
             else request.env["portal.document.type"].sudo().search([
                 ("portal_visible", "=", True),
             ])
@@ -32,7 +32,7 @@ class PortalStarterController(CustomerPortal):
 
         sidebar_items = partner.portal_sidebar_items or []
 
-        values.sudo().update({
+        values.update({
             "portal_config": portal_config,
             "document_types": document_types,
             "sidebar_items": sidebar_items,
@@ -40,16 +40,26 @@ class PortalStarterController(CustomerPortal):
         })
         return values
 
+    # ------------------------------------------------------------------
+    # Override the default /my route so portal users land on our custom
+    # home instead of the stock Odoo portal.
+    # ------------------------------------------------------------------
     @http.route(
-        ["/my/home"],
+        ["/my", "/my/home"],
         type="http",
         auth="user",
         website=True,
     )
-    def portal_home(self, **kw):
-        """Custom portal home page."""
+    def home(self, **kw):
+        """Render the custom Portal Starter home page.
+
+        Overrides ``CustomerPortal.home`` so that /my (the default
+        landing page for portal users) shows our branded portal with
+        the welcome banner, document-type cards and theme from
+        ``portal.config``.
+        """
         values = self._prepare_home_values({})
-        partner = request.env.user.partner_id
+        partner = request.env.user.partner_id.sudo()
 
         if partner.portal_theme and partner.portal_theme != "default":
             values["portal_theme"] = partner.portal_theme
