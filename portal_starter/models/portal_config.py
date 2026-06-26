@@ -23,6 +23,7 @@ class PortalDocumentType(models.Model):
         comodel_name="ir.model",
         string="Odoo Model",
         required=True,
+        ondelete="cascade",
         help="The Odoo model this document type represents",
     )
     active = fields.Boolean(default=True)
@@ -49,7 +50,7 @@ class PortalDocumentType(models.Model):
         string="Items Per Page",
         default=20,
     )
-    allowed_actions = fields.Serialized(
+    allowed_actions = fields.Json(
         string="Allowed Actions",
         default=lambda self: self._default_allowed_actions(),
         help="JSON list of actions portal users can perform on this document type",
@@ -205,4 +206,18 @@ class PortalConfig(models.Model):
             "type": "ir.actions.act_url",
             "url": "/my/home?preview=true",
             "target": "new",
+        }
+
+    def action_open_portal_config(self):
+        config = self.env["portal.config"].search(
+            [("company_id", "=", self.env.company.id)], limit=1
+        )
+        if not config:
+            config = config.create({"company_id": self.env.company.id})
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Portal Configuration",
+            "res_model": "portal.config",
+            "res_id": config.id,  # ← acá está la clave
+            "view_mode": "form",
         }

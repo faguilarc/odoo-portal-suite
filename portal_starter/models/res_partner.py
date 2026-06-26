@@ -56,7 +56,7 @@ class ResPartner(models.Model):
         string="Portal Logo Override",
         help="Override the default company logo in the portal for this partner",
     )
-    portal_sidebar_items = fields.Serialized(
+    portal_sidebar_items = fields.Json(
         string="Sidebar Configuration",
         default=lambda self: self._default_sidebar_items(),
         help="JSON configuration for portal sidebar menu items",
@@ -122,10 +122,9 @@ class ResPartner(models.Model):
             raise ValidationError(_("Partner must have an email to receive portal invitation."))
         self._generate_portal_code()
         template = self.env.ref("portal_starter.portal_invite_email_template")
-        self.with_context(
-            portal_link=f"/my/home?code={self.portal_code}"
-        ).message_post_with_template(
-            template.id,
-            composition_mode="comment",
+        template.with_context(
+            portal_link=f"/my/home?code={self.portal_code}",
+        ).send_mail(
+            self.id,
             email_values={"email_to": self.email},
         )

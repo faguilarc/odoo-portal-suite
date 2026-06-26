@@ -58,7 +58,8 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-search"/> Search
+                                <i class="fa fa-search"/>
+                                Search
                             </button>
                         </form>
                     </div>
@@ -102,11 +103,13 @@
                                         <td class="text-right">
                                             <a t-attf-href="/my/documents/{{ doc_type.code }}/{{ doc.id }}"
                                                class="btn btn-sm btn-outline-primary mr-1">
-                                                <i class="fa fa-eye"/> View
+                                                <i class="fa fa-eye"/>
+                                                View
                                             </a>
                                             <a t-attf-href="/my/documents/{{ doc_type.code }}/{{ doc.id }}/download"
                                                class="btn btn-sm btn-outline-secondary">
-                                                <i class="fa fa-download"/> PDF
+                                                <i class="fa fa-download"/>
+                                                PDF
                                             </a>
                                         </td>
                                     </tr>
@@ -127,11 +130,10 @@
                 <!-- Pager -->
                 <t t-if="pager">
                     <div class="mt-4" t-raw="pager"/>
-                </div>
-
+                </t>
             </div>
-
         </t>
+
     </template>
 
     <!-- Portal Document Detail Page -->
@@ -143,7 +145,8 @@
                 <!-- Back Button -->
                 <a t-attf-href="/my/documents/{{ doc_type.code }}"
                    class="btn btn-outline-secondary mb-4">
-                    <i class="fa fa-arrow-left"/> Back to list
+                    <i class="fa fa-arrow-left"/>
+                    Back to list
                 </a>
 
                 <!-- Document Header -->
@@ -154,14 +157,15 @@
                                 <h2 t-esc="document.name"/>
                                 <p class="text-muted mb-0">
                                     <t t-esc="doc_type.name"/>
-                                    &bull;
+
                                     <t t-esc="getattr(document, 'create_date', '')[:10]"/>
                                 </p>
                             </div>
                             <div>
                                 <a t-attf-href="/my/documents/{{ doc_type.code }}/{{ document.id }}/download"
                                    class="btn btn-primary">
-                                    <i class="fa fa-download"/> Download PDF
+                                    <i class="fa fa-download"/>
+                                    Download PDF
                                 </a>
                             </div>
                         </div>

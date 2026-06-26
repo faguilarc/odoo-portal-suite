@@ -12,14 +12,17 @@
         "portal",
         "web",
         "mail",
+        "sale_management",
+        "stock"
     ],
     "data": [
         "security/portal_starter_security.xml",
         "security/ir.model.access.csv",
-        "data/portal_starter_data.xml",
+
         "views/res_partner_views.xml",
         "views/portal_templates.xml",
         "views/portal_home_templates.xml",
+        "data/portal_starter_data.xml",
     ],
     "assets": {
         "web.assets_frontend": [

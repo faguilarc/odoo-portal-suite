@@ -32,7 +32,7 @@ class PortalStarterController(CustomerPortal):
 
         sidebar_items = partner.portal_sidebar_items or []
 
-        values.update({
+        values.sudo().update({
             "portal_config": portal_config,
             "document_types": document_types,
             "sidebar_items": sidebar_items,
@@ -78,7 +78,7 @@ class PortalStarterController(CustomerPortal):
             )
         )
         if not doc_type_record:
-            return request.not_found()
+            return request.sudo().not_found()
 
         partner = request.env.user.partner_id
         model = doc_type_record.model_id.model
@@ -99,14 +99,14 @@ class PortalStarterController(CustomerPortal):
 
         items_per_page = doc_type_record.max_items_per_page or 20
         document_model = request.env[model].sudo()
-        total_count = document_model.search_count(domain)
+        total_count = document_model.sudo().search_count(domain)
         pager = request.website.pager(
             url=f"/my/documents/{doc_type}",
             total=total_count,
             page=page,
             step=items_per_page,
         )
-        documents = document_model.search(
+        documents = document_model.sudo().search(
             domain,
             limit=items_per_page,
             offset=pager["offset"],
@@ -122,7 +122,7 @@ class PortalStarterController(CustomerPortal):
             "sortby": sortby,
             "page_name": "documents",
         })
-        return request.render("portal_starter.portal_document_list_page", values)
+        return request.sudo().render("portal_starter.portal_document_list_page", values)
 
     @http.route(
         ["/my/documents/<string:doc_type>/<int:doc_id>"],

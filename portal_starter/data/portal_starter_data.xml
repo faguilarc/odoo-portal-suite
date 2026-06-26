@@ -18,7 +18,8 @@
             <field name="portal_welcome_message" type="html">
                 <h2>Bienvenido a su portal</h2>
                 <p>Desde aqui puede gestionar sus documentos, consultar facturas,
-                   pedidos, entregas y mas.</p>
+                    pedidos, entregas y mas.
+                </p>
             </field>
             <field name="primary_color">#1C6EF2</field>
             <field name="session_timeout_minutes">480</field>
@@ -72,68 +73,71 @@
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="subject">You have been invited to {{ object.company_id.name }} Portal</field>
             <field name="body_html" type="html">
-<div style="margin: 0; padding: 0; font-size: 14px;">
-    <table width="100%" cellpadding="0" bgcolor="#f4f4f4" style="padding: 20px;">
-        <tr>
-            <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" bgcolor="#ffffff"
-                       style="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <!-- Header -->
-                    <tr>
-                        <td bgcolor="#1C6EF2" style="padding: 30px 40px; text-align: center;">
-                            <h1 style="margin: 0; color: #ffffff; font-size: 24px;">
-                                {{ object.company_id.name }}
-                            </h1>
-                            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9);">
-                                Customer Portal Access
-                            </p>
-                        </td>
-                    </tr>
-                    <!-- Body -->
-                    <tr>
-                        <td style="padding: 30px 40px;">
-                            <p>Hello <strong>{{ object.name }}</strong>,</p>
-                            <p>You have been granted access to our customer portal.
-                               Here you can manage your orders, invoices, deliveries,
-                               and more.</p>
-                            <p style="text-align: center; margin: 30px 0;">
-                                <a href="{{ ctx.get('portal_link', '/my') }}"
-                                   style="background-color: #1C6EF2; color: white;
+                <div style="margin: 0; padding: 0; font-size: 14px;">
+                    <table width="100%" cellpadding="0" bgcolor="#f4f4f4" style="padding: 20px;">
+                        <tr>
+                            <td align="center">
+                                <table width="600" cellpadding="0" cellspacing="0" bgcolor="#ffffff"
+                                       style="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <!-- Header -->
+                                    <tr>
+                                        <td bgcolor="#1C6EF2" style="padding: 30px 40px; text-align: center;">
+                                            <h1 style="margin: 0; color: #ffffff; font-size: 24px;">
+                                                {{ object.company_id.name }}
+                                            </h1>
+                                            <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9);">
+                                                Customer Portal Access
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <!-- Body -->
+                                    <tr>
+                                        <td style="padding: 30px 40px;">
+                                            <p>Hello <strong>{{ object.name }}</strong>,
+                                            </p>
+                                            <p>You have been granted access to our customer portal.
+                                                Here you can manage your orders, invoices, deliveries,
+                                                and more.
+                                            </p>
+                                            <p style="text-align: center; margin: 30px 0;">
+                                                <a href="{{ ctx.get('portal_link', '/my') }}"
+                                                   style="background-color: #1C6EF2; color: white;
                                           padding: 14px 32px; text-decoration: none;
                                           border-radius: 6px; font-weight: bold;
                                           display: inline-block;">
-                                    Access Your Portal
-                                </a>
-                            </p>
-                            {% if ctx.get('custom_message') %}
-                            <p style="background: #f8f9fa; padding: 15px;
+                                                    Access Your Portal
+                                                </a>
+                                            </p>
+                                            {% if ctx.get('custom_message') %}
+                                            <p style="background: #f8f9fa; padding: 15px;
                                       border-left: 4px solid #1C6EF2;
                                       border-radius: 4px;">
-                                {{ ctx.get('custom_message') }}
-                            </p>
-                            {% endif %}
-                            <p>If the button above doesn't work, copy and paste this
-                               link into your browser:</p>
-                            <p style="color: #1C6EF2; word-break: break-all;">
-                                {{ ctx.get('portal_link', '/my') }}
-                            </p>
-                        </td>
-                    </tr>
-                    <!-- Footer -->
-                    <tr>
-                        <td style="padding: 20px 40px; background: #f8f9fa;
+                                                {{ ctx.get('custom_message') }}
+                                            </p>
+                                            {% endif %}
+                                            <p>If the button above doesn't work, copy and paste this
+                                                link into your browser:
+                                            </p>
+                                            <p style="color: #1C6EF2; word-break: break-all;">
+                                                {{ ctx.get('portal_link', '/my') }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="padding: 20px 40px; background: #f8f9fa;
                                    text-align: center; color: #6c757d; font-size: 12px;">
-                            <p style="margin: 0;">
-                                {{ object.company_id.name }} &mdash;
-                                {{ object.company_id.phone or '' }}
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
+                                            <p style="margin: 0;">
+                                                {{ object.company_id.name }} &amp;mdash;
+                                                {{ object.company_id.phone or '' }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </field>
             <field name="email_from">{{ (object.company_id.email or user.email) }}</field>
             <field name="email_to">{{ object.email }}</field>

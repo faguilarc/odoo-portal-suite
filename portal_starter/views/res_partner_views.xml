@@ -10,35 +10,35 @@
             <xpath expr="//page[@name='sales_purchases']" position="inside">
                 <group string="Portal Access" groups="portal_starter.portal_starter_group_manager">
                     <field name="portal_enabled"/>
-                    <field name="portal_code" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
-                    <field name="portal_max_sessions" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
-                    <field name="portal_last_login" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
-                    <field name="portal_login_count" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                    <field name="portal_code" invisible="portal_enabled == False"/>
+                    <field name="portal_max_sessions" invisible="portal_enabled == False"/>
+                    <field name="portal_last_login" invisible="portal_enabled == False"/>
+                    <field name="portal_login_count" invisible="portal_enabled == False"/>
                 </group>
                 <group string="Portal Appearance" groups="portal_starter.portal_starter_group_manager">
-                    <field name="portal_theme" attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                    <field name="portal_theme" invisible="portal_enabled == False"/>
                     <field name="portal_company_logo" filename="portal_company_logo"
-                           attrs="{'invisible': [('portal_enabled', '=', False)]}"
+                           invisible="portal_enabled == False"
                            widget="image" class="oe_avatar"/>
                 </group>
                 <group string="Portal Document Access" groups="portal_starter.portal_starter_group_manager">
                     <field name="portal_allowed_document_types"
                            widget="many2many_tags"
-                           attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                           invisible="portal_enabled == False"/>
                 </group>
             </xpath>
             <!-- Add portal action buttons -->
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_open_portal" type="object"
                         class="oe_stat_button" icon="fa-globe"
-                        attrs="{'invisible': [('portal_enabled', '=', False)]}">
+                        invisible="portal_enabled == False">
                     <field name="portal_enabled" widget="boolean_button"
                            string="Portal"/>
                 </button>
                 <button name="action_send_portal_invite" type="object"
                         class="oe_stat_button" icon="fa-paper-plane"
                         string="Invite"
-                        attrs="{'invisible': [('portal_enabled', '=', False)]}"/>
+                        invisible="portal_enabled == False"/>
             </xpath>
         </field>
     </record>
@@ -50,12 +50,7 @@
         <field name="arch" type="xml">
             <form string="Portal Document Type">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button type="action" name="%(portal_starter.portal_document_type_action)d"
-                                class="oe_stat_button" icon="fa-file-alt">
-                            <field string="Documents" name="id" widget="integer"/>
-                        </button>
-                    </div>
+
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="e.g. Sales Orders"/>
@@ -99,8 +94,9 @@
     <record id="portal_document_type_list_view" model="ir.ui.view">
         <field name="name">portal.document.type.list</field>
         <field name="model">portal.document.type</field>
+        <field name="type">tree</field>   <!-- Cambia a tree -->
         <field name="arch" type="xml">
-            <list string="Portal Document Types" decoration-danger="not portal_visible">
+            <tree string="Portal Document Types" decoration-danger="not portal_visible">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -108,7 +104,7 @@
                 <field name="model_id"/>
                 <field name="portal_visible" widget="boolean_toggle"/>
                 <field name="max_items_per_page"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -201,13 +197,14 @@
                                 <field name="footer_text"/>
                                 <field name="show_social_links"/>
                                 <field name="social_facebook"
-                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+
+                                       invisible="show_social_links == False"/>
                                 <field name="social_linkedin"
-                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+                                       invisible="show_social_links == False"/>
                                 <field name="social_twitter"
-                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+                                       invisible="show_social_links == False"/>
                                 <field name="social_instagram"
-                                       attrs="{'invisible': [('show_social_links', '=', False)]}"/>
+                                       invisible="show_social_links == False"/>
                             </group>
                             <group string="Advanced Customization">
                                 <field name="custom_css" nolabel="1"

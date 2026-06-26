@@ -37,10 +37,7 @@ class PortalInviteWizard(models.TransientModel):
     def action_invite(self):
         """Execute the portal invitation process."""
         self.ensure_one()
-        mail_template = self.env.ref(
-            "portal_starter.portal_invite_email_template",
-            raise_if_not_found=False,
-        )
+        template = self.env.ref("portal_starter.portal_invite_email_template")
 
         for partner in self.partner_ids.filtered("email"):
             # Ensure portal is enabled
@@ -58,14 +55,13 @@ class PortalInviteWizard(models.TransientModel):
                 partner.sudo()._generate_portal_code()
 
             # Send email
-            if self.send_email and mail_template:
+            if self.send_email and template:
                 partner.with_context(
                     portal_link=f"/my/home?code={partner.portal_code}",
                     custom_message=self.message or "",
-                ).message_post_with_template(
-                    mail_template.id,
-                    composition_mode="comment",
-                    email_values={"email_to": partner.email},
+                ).send_mail(
+                    self.id,
+                    email_values={"email_to": self.email},
                 )
 
         return {"type": "ir.actions.act_window_close"}
