@@ -56,12 +56,12 @@ class PortalInviteWizard(models.TransientModel):
 
             # Send email
             if self.send_email and template:
-                partner.with_context(
+                template.with_context(
                     portal_link=f"/my/home?code={partner.portal_code}",
                     custom_message=self.message or "",
                 ).send_mail(
-                    self.id,
-                    email_values={"email_to": self.email},
+                    partner.id,
+                    email_values={"email_to": partner.email},
                 )
 
         return {"type": "ir.actions.act_window_close"}
