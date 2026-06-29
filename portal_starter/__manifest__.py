@@ -12,6 +12,7 @@
         "portal",
         "web",
         "mail",
+        "website",
         "sale_management",
         "stock"
     ],

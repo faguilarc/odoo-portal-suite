@@ -90,7 +90,7 @@ class PortalStarterController(CustomerPortal):
         if not doc_type_record:
             return request.sudo().not_found()
 
-        partner = request.env.user.partner_id
+        partner = request.env.user.partner_id.sudo()
         model = doc_type_record.model_id.model
 
         domain = self._get_document_domain(model, partner, search, search_in)
@@ -109,14 +109,18 @@ class PortalStarterController(CustomerPortal):
 
         items_per_page = doc_type_record.max_items_per_page or 20
         document_model = request.env[model].sudo()
-        total_count = document_model.sudo().search_count(domain)
-        pager = request.website.pager(
+        total_count = document_model.search_count(domain)
+
+        # Build pager via the website model — works even if
+        # request.website is not set by the routing layer.
+        website = request.env["website"].sudo().get_current_website()
+        pager = website.pager(
             url=f"/my/documents/{doc_type}",
             total=total_count,
             page=page,
             step=items_per_page,
         )
-        documents = document_model.sudo().search(
+        documents = document_model.search(
             domain,
             limit=items_per_page,
             offset=pager["offset"],
@@ -154,7 +158,7 @@ class PortalStarterController(CustomerPortal):
             return request.not_found()
 
         model = doc_type_record.model_id.model
-        partner = request.env.user.partner_id
+        partner = request.env.user.partner_id.sudo()
 
         domain = self._get_document_domain(model, partner)
         domain.append(("id", "=", doc_id))
@@ -188,7 +192,7 @@ class PortalStarterController(CustomerPortal):
             return request.not_found()
 
         model = doc_type_record.model_id.model
-        partner = request.env.user.partner_id
+        partner = request.env.user.partner_id.sudo()
         domain = self._get_document_domain(model, partner)
         domain.append(("id", "=", doc_id))
         document = request.env[model].sudo().search(domain, limit=1)
