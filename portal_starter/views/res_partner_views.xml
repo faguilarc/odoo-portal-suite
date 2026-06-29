@@ -231,7 +231,7 @@
         <field name="model_id" ref="model_portal_config"/>
         <field name="state">code</field>
         <field name="code">
-action = model.action_open_portal_config()
+            action = model.action_open_portal_config()
         </field>
     </record>
 

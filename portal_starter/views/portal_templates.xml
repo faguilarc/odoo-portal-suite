@@ -13,7 +13,7 @@
                     <h1>
                         <i t-attf-class="fa {{ doc_type.icon or 'fa-file' }}"
                            t-attf-style="color: {{ doc_type.color or '#1C6EF2' }};"/>
-                        <t t-field="doc_type.name"/>
+                        <t t-esc="doc_type.name"/>
                     </h1>
                     <p class="text-muted" t-field="doc_type.description"/>
                 </div>
@@ -87,7 +87,7 @@
                                                 <t t-esc="doc.name"/>
                                             </a>
                                         </td>
-                                        <td t-esc="doc.create_date[:10]"/>
+                                        <td t-esc="doc.create_date"/>
                                         <td>
                                             <t t-if="hasattr(doc, 'amount_total')">
                                                 <t t-esc="doc.currency_id.symbol"/>
@@ -158,7 +158,7 @@
                                 <p class="text-muted mb-0">
                                     <t t-esc="doc_type.name"/>
 
-                                    <t t-esc="getattr(document, 'create_date', '')[:10]"/>
+                                    <t t-esc="getattr(document, 'create_date', '')"/>
                                 </p>
                             </div>
                             <div>

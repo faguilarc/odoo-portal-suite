@@ -9,7 +9,7 @@ class PortalStarterController(CustomerPortal):
 
     def _prepare_home_values(self, values):
         """Add portal config and document types to home page values."""
-        values = super()._prepare_home_values(values)
+        # values = super()._prepare_home_values(values)
         partner = request.env.user.partner_id.sudo()
 
         portal_config = request.env["portal.config"].sudo().search(
@@ -132,7 +132,7 @@ class PortalStarterController(CustomerPortal):
             "sortby": sortby,
             "page_name": "documents",
         })
-        return request.sudo().render("portal_starter.portal_document_list_page", values)
+        return request.render("portal_starter.portal_document_list_page", values)
 
     @http.route(
         ["/my/documents/<string:doc_type>/<int:doc_id>"],

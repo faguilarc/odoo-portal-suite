@@ -152,3 +152,5 @@ class ResPartner(models.Model):
                 "email_from": company.email or self.env.user.email_formatted,
             }
         ).send()
+
+
